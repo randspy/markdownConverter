@@ -34,4 +34,20 @@ public class MarkdownConverterTest {
     assertEquals(expectedHtml, convert.toHtml("text"));
   }
 
+  @Test
+  public void
+  header() {
+    String expectedHtml = wrappedWithHeader("<h1>header</h1>\n");
+
+    assertEquals(expectedHtml, convert.toHtml("#header"));
+  }
+
+ @Test
+  public void
+  manyItems() {
+    String expectedHtml = wrappedWithHeader("<h1>header</h1>\n<p>text</p>\n");
+
+    assertEquals(expectedHtml, convert.toHtml("#header\ntext"));
+  }
+
 }
