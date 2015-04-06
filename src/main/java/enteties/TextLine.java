@@ -4,7 +4,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextLine {
-  public String text = "";
+  private String text;
+
+  public TextLine(String text) {
+    this.text = text;
+  }
 
   public boolean isEmpty(){
     return text.isEmpty();
@@ -13,14 +17,14 @@ public class TextLine {
   public boolean startsWith(String string) {
     return text.startsWith(string);
   }
-  public String matchingPattern(String input) {
-    Pattern pattern = Pattern.compile(input);
+
+  public String substring(Pattern pattern) {
 
     Matcher matcher = pattern.matcher(text);
     if (matcher.find())
     {
-      text = matcher.group(0);
+      return matcher.group(0);
     }
-    return text;
+    return "";
   }
 }

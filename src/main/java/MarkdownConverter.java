@@ -1,7 +1,10 @@
 package main.java;
 
 import main.java.enteties.TextLine;
-import main.java.parsers.HeaderH1;
+import main.java.parsers.Header;
+import main.java.parsers.Marker;
+
+import java.util.regex.Pattern;
 
 public class MarkdownConverter {
   public String toHtml(String markdown) {
@@ -13,8 +16,7 @@ public class MarkdownConverter {
     String[] lines = markdown.split("\n");
 
     for (String line : lines) {
-      TextLine text = new TextLine();
-      text.text = line;
+      TextLine text = new TextLine(line);
       content += lineToHtml(text);
     }
 
@@ -22,12 +24,18 @@ public class MarkdownConverter {
   }
 
   private String lineToHtml(TextLine line) {
-    HeaderH1 h1 = new HeaderH1();
+    Header header = new Header();
 
-    String content = h1.parse(line).htmlValue;
+    String content = header.parse(line, new Marker("###", "h3")).htmlValue;
+    if (content.isEmpty() && !line.isEmpty()) {
+      content += header.parse(line, new Marker("##", "h2")).htmlValue;
+    }
+    if (content.isEmpty() && !line.isEmpty()) {
+      content += header.parse(line, new Marker("#", "h1")).htmlValue;
+    }
 
     if (content.isEmpty() && !line.isEmpty()) {
-      content += "<p>" + line.text + "</p>\n";
+      content += "<p>" + line.substring(Pattern.compile(".*")) + "</p>\n";
     }
     return content;
   }
