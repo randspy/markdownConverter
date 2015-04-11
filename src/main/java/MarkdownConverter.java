@@ -7,33 +7,50 @@ import main.java.parsers.h1.H1Parser;
 import main.java.parsers.plainText.PlainTextParser;
 
 public class MarkdownConverter {
+  private Text text;
+  private String content;
+
   public String toHtml(String markdown) {
 
     String header = "<html>\n<body>\n";
     String footer = "</body>\n</html>";
-    String content = "";
 
-    Text text = new Text(markdown);
+    initContent();
+    setContentWith(markdown);
 
-    while(!text.isEmpty())
-    {
-      H1Matcher h1Matcher = new H1Matcher();
-      H1Parser hiParser = new H1Parser();
-
-      if (h1Matcher.startsWith(text)) {
-        ParsedText parsedText = hiParser.parse(text);
-        content += parsedText.htmlTag + "\n";
-        text = new Text(parsedText.restOfText);
-        continue;
-      }
-
-      PlainTextParser plainTextParser = new PlainTextParser();
-      ParsedText parsedText = plainTextParser.parse(text);
-      content += parsedText.htmlTag + "\n";
-      text = new Text(parsedText.restOfText);
+    while (!text.isEmpty()) {
+      headerH1();
+      plainText();
     }
 
     return header + content + footer;
   }
 
+  private void initContent() {
+    content = "";
+  }
+
+  private void headerH1() {
+    H1Matcher h1Matcher = new H1Matcher();
+
+    if (h1Matcher.startsWith(text)) {
+      H1Parser h1Parser = new H1Parser();
+      ParsedText parsedText = h1Parser.parse(text);
+      content += parsedText.htmlTag + "\n";
+      setContentWith(parsedText.restOfText);
+    }
+  }
+
+  private void plainText() {
+    if (!text.isEmpty()) {
+      PlainTextParser plainTextParser = new PlainTextParser();
+      ParsedText parsedText = plainTextParser.parse(text);
+      content += parsedText.htmlTag + "\n";
+      setContentWith(parsedText.restOfText);
+    }
+  }
+
+  private void setContentWith(String markdown) {
+    text = new Text(markdown);
+  }
 }

@@ -11,6 +11,4 @@ public class PlainTextParser {
     parsedText.restOfText = text.fromNextLine().subtextMatching(".*");
     return parsedText;
   }
-
-
 }
