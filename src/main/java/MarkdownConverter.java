@@ -4,6 +4,7 @@ import main.java.enteties.ParsedText;
 import main.java.enteties.Text;
 import main.java.parsers.h1.H1Matcher;
 import main.java.parsers.h1.H1Parser;
+import main.java.parsers.plainText.PlainTextParser;
 
 public class MarkdownConverter {
   public String toHtml(String markdown) {
@@ -26,7 +27,10 @@ public class MarkdownConverter {
         continue;
       }
 
-      content += text.subtextMatching(".*");
+      PlainTextParser plainTextParser = new PlainTextParser();
+      ParsedText parsedText = plainTextParser.parse(text);
+      content += parsedText.htmlTag + "\n";
+      text = new Text(parsedText.restOfText);
     }
 
     return header + content + footer;

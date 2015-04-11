@@ -25,14 +25,14 @@ public class MarkdownConverterTest {
     String expectedHtml = wrappedWithHeader("");
     assertEquals(expectedHtml, convert.toHtml(""));
   }
-//
-//  @Test
-//  public void
-//  text() {
-//    String expectedHtml = wrappedWithHeader("<p>text</p>\n");
-//
-//    assertEquals(expectedHtml, convert.toHtml("text"));
-//  }
+
+  @Test
+  public void
+  text() {
+    String expectedHtml = wrappedWithHeader("<p>text</p>\n");
+
+    assertEquals(expectedHtml, convert.toHtml("text"));
+  }
 
   @Test
   public void
@@ -41,8 +41,8 @@ public class MarkdownConverterTest {
 
     assertEquals(expectedHtml, convert.toHtml("#header"));
   }
-//
-////  @Test
+
+//  @Test
 //  public void
 //  manyItems() {
 //    String expectedHtml = wrappedWithHeader(
@@ -59,16 +59,16 @@ public class MarkdownConverterTest {
 //            "text"));
 //  }
 
-//  @Test
-//  public void
-//  multiLineItems() {
-//    String expectedHtml = wrappedWithHeader(
-//           "<h1>header</h1>\n");
-//
-//    assertEquals(expectedHtml,
-//        convert.toHtml(
-//            "header 1\n" +
-//            "====================\n"));
-//  }
+  @Test
+  public void
+  multiLineItems() {
+    String expectedHtml = wrappedWithHeader(
+           "<h1>header 1</h1>\n");
+
+    assertEquals(expectedHtml,
+        convert.toHtml(
+            "header 1\n" +
+            "====================\n"));
+  }
 
 }
