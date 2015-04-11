@@ -1,10 +1,9 @@
 package main.java;
 
-import main.java.enteties.TextLine;
-import main.java.parsers.Header;
-import main.java.parsers.Marker;
-
-import java.util.regex.Pattern;
+import main.java.enteties.ParsedText;
+import main.java.enteties.Text;
+import main.java.parsers.h1.H1Matcher;
+import main.java.parsers.h1.H1Parser;
 
 public class MarkdownConverter {
   public String toHtml(String markdown) {
@@ -13,30 +12,24 @@ public class MarkdownConverter {
     String footer = "</body>\n</html>";
     String content = "";
 
-    String[] lines = markdown.split("\n");
+    Text text = new Text(markdown);
 
-    for (String line : lines) {
-      TextLine text = new TextLine(line);
-      content += lineToHtml(text);
+    while(!text.isEmpty())
+    {
+      H1Matcher h1Matcher = new H1Matcher();
+      H1Parser hiParser = new H1Parser();
+
+      if (h1Matcher.startsWith(text)) {
+        ParsedText parsedText = hiParser.parse(text);
+        content += parsedText.htmlTag + "\n";
+        text = new Text(parsedText.restOfText);
+        continue;
+      }
+
+      content += text.subtextMatching(".*");
     }
 
     return header + content + footer;
   }
 
-  private String lineToHtml(TextLine line) {
-    Header header = new Header();
-
-    String content = header.parse(line, new Marker("###", "h3")).htmlValue;
-    if (content.isEmpty() && !line.isEmpty()) {
-      content += header.parse(line, new Marker("##", "h2")).htmlValue;
-    }
-    if (content.isEmpty() && !line.isEmpty()) {
-      content += header.parse(line, new Marker("#", "h1")).htmlValue;
-    }
-
-    if (content.isEmpty() && !line.isEmpty()) {
-      content += "<p>" + line.substring(Pattern.compile(".*")) + "</p>\n";
-    }
-    return content;
-  }
 }
